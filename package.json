@@ -9,6 +9,10 @@
   },
   "author": "Erik Simmler",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tgecho/stryker-ignore-pattern.git"
+  },
   "dependencies": {
     "@stryker-mutator/api": "^4.5.1",
     "@stryker-mutator/util": "^4.5.1",

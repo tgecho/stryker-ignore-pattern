@@ -1,9 +1,22 @@
 import { PluginKind, declareFactoryPlugin } from "@stryker-mutator/api/plugin";
 
-import { create } from "./ignore-pattern";
+import {
+  createIgnorePatternChecker,
+  IgnorePatternChecker,
+} from "./ignore-pattern";
+import strykerValidationSchema from "./ignore-pattern-options.json";
 
-export const strykerPlugins = [
-  declareFactoryPlugin(PluginKind.Checker, "ignore", create),
+const strykerPlugins = [
+  declareFactoryPlugin(
+    PluginKind.Checker,
+    "ignore-pattern",
+    createIgnorePatternChecker
+  ),
 ];
 
-export const createTypescriptChecker = create;
+export {
+  strykerPlugins,
+  createIgnorePatternChecker,
+  IgnorePatternChecker,
+  strykerValidationSchema,
+};

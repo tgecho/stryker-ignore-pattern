@@ -1,26 +1,25 @@
 import { Checker, CheckResult, CheckStatus } from "@stryker-mutator/api/check";
 import {
-  PluginKind,
-  declareClassPlugin,
   tokens,
   commonTokens,
   Injector,
   PluginContext,
-  Scope,
 } from "@stryker-mutator/api/plugin";
 import { Logger } from "@stryker-mutator/api/logging";
 import { Mutant, StrykerOptions } from "@stryker-mutator/api/core";
 import { readFile } from "fs/promises";
 
-create.inject = tokens(commonTokens.injector);
-export function create(injector: Injector<PluginContext>): IgnoreChecker {
-  return injector.injectClass(IgnoreChecker);
+createIgnorePatternChecker.inject = tokens(commonTokens.injector);
+export function createIgnorePatternChecker(
+  injector: Injector<PluginContext>
+): IgnorePatternChecker {
+  return injector.injectClass(IgnorePatternChecker);
 }
 
 type IgnoreRange = { pattern: string; start: number; end: number };
 type IgnoreOptions = { ignorePatterns?: string[] };
 
-export class IgnoreChecker implements Checker {
+export class IgnorePatternChecker implements Checker {
   public static inject = tokens(commonTokens.logger, commonTokens.options);
 
   private files: { [path: string]: Promise<IgnoreRange[]> } = {};
@@ -33,6 +32,7 @@ export class IgnoreChecker implements Checker {
     this.patterns = options.ignorePatterns?.map(
       (pattern: string) => new RegExp(pattern, "g")
     );
+    this.logger.debug(`Ignore Patterns: ${this.patterns}`);
   }
 
   public async init(): Promise<void> {
@@ -40,19 +40,21 @@ export class IgnoreChecker implements Checker {
   }
 
   private async scanFile(fileName: string): Promise<IgnoreRange[]> {
+    this.logger.debug(`Scanning new file ${fileName}`);
     if (!this.patterns) return [];
 
     const content = (await readFile(fileName)).toString();
     const ranges = [];
 
     for (const pattern of this.patterns) {
-      let match;
-      while ((match = pattern.exec(content)) !== null) {
-        ranges.push({
-          pattern: pattern.toString(),
-          start: match.index,
-          end: match.index + match[0].length,
-        });
+      for (const match of content.matchAll(pattern)) {
+        if (match.index !== undefined) {
+          ranges.push({
+            pattern: pattern.toString(),
+            start: match.index,
+            end: match.index + match[0].length,
+          });
+        }
       }
     }
     return ranges;
