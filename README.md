@@ -14,7 +14,14 @@ export function invariant(condition: boolean, message: string): void {
 
 These can be removed as part of the production build.
 
-## Example Config
+## Install / Example Config
+
+```sh
+# Or npm/yarn/etc...
+$ pnpm install -D stryker-ignore-pattern
+```
+
+In your [Stryker config file](https://stryker-mutator.io/docs/stryker-js/config-file):
 
 ```js
 {
