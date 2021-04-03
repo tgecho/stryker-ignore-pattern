@@ -4,15 +4,27 @@
   "description": "Kill Stryker mutations based on patterns",
   "main": "dist/index.js",
   "scripts": {
+    "prepack": "pnpm build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
-  "author": "Erik Simmler",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist"
+  ],
+  "author": "Erik Simmler <tgecho@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/tgecho/stryker-ignore-pattern.git"
   },
+  "engines": {
+    "node": ">=10"
+  },
+  "keywords": [
+    "stryker"
+  ],
   "dependencies": {
     "@stryker-mutator/api": "^4.5.1",
     "@stryker-mutator/util": "^4.5.1",
